@@ -58,7 +58,6 @@ addExpense = async () => {
         });
         let result = await resp.json();
         expenseList.push(result);
-        console.log(`result`, result)
         inputText = '';
         inputT.value = '';
         inputCost = '';
@@ -89,9 +88,9 @@ addExpense = async () => {
         beingEdited = false;
         inputT.focus();
         render();
-    } else if (!inputCost) alert("Пожалуйста, введите сумму расхода");
-    else if (inputCost <= 0) alert("Сумма не может быть меньше нуля");
-    else alert('Пожалуйста, введите текст');
+    } else if (!inputCost) inputN.className = 'error';
+    else if (inputCost <= 0) inputN.className = 'error';
+    else inputT.className = 'error';
 }
 render = () => {
     const expenseContainer = document.querySelector('.content');
