@@ -80,7 +80,6 @@ article.expense-container{
 .sum{
     text-align: right;
     width: 90%;
-    text-transform: capitalize;
 }
 p{
     word-break: break-all;

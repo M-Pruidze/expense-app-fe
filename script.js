@@ -1,14 +1,15 @@
-let input;
+let inputT;
+let inputN;
 let inputText = '';
 let inputCost = '';
-let expenseList = JSON.parse(localStorage.getItem('list')) || [];
+let expenseList = [];
 let beingEdited = false;
 let editBtn;
 let editID = null;
 let total;
 
-// add async
-window.onload = () => {
+
+window.onload = async () => {
     inputT = document.getElementById('inputText');
     inputN = document.getElementById('inputCost');
     const addBtn = document.getElementById("add-btn");
@@ -28,11 +29,10 @@ window.onload = () => {
     });
     addBtn.addEventListener("click", addExpense);
 
-    // const response = await (await fetch('http://localhost:4000/expense', {
-    //     method: 'GET'
-    // })).json();
-    // expenseList = response;
-
+    const response = await (await fetch('http://localhost:4000/expense', {
+        method: 'GET'
+    })).json();
+    expenseList = response;
     render();
 }
 
@@ -43,55 +43,42 @@ updateValueC = (e) => {
     inputCost = e.target.value;
 }
 
-// add async
-addExpense = () => {
+addExpense = async () => {
     if (inputText.trim() && inputCost > 0 && !beingEdited) {
-        // const resp = await fetch('http://localhost:4000/expense', {
-        //     method: "POST",
-        //     headers: {
-        //         'Content-Type': 'application/json;charset=utf-8',
-        //         'Access-Control-Allow-Origin': '*'
-        //     },
-        //     body: JSON.stringify({
-        //         text: inputText,
-        //         cost: inputCost
-        //     })
-        // });
-        // let result = await resp.json();
-        // expenseList.push(result);
-
-        expenseList.push({
-            text: inputText,
-            cost: inputCost
-        })
+        const resp = await fetch('http://localhost:4000/expense', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({
+                text: inputText,
+                cost: inputCost,
+            })
+        });
+        let result = await resp.json();
+        expenseList.push(result);
+        console.log(`result`, result)
         inputText = '';
         inputT.value = '';
         inputCost = '';
         inputN.value = '';
         inputT.focus();
-        // localStorage.setItem('list',JSON.stringify(expenseList));
-        console.log(`expenseList`, expenseList);
         render();
     } else if (inputText.trim() && inputCost > 0 && beingEdited) {
-        // const response = await fetch(`http://localhost:4000/expense/${editID}`, {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Content-Type': 'application/json;charset=utf-8',
-        //         'Access-Control-Allow-Origin': '*'
-        //     },
-        //     body: JSON.stringify({
-        //         text: inputText,
-        //     })
-        // });
-        // let result = await response.json();
-
-        // expenseList = expenseList.map(expense => {
-        //     if (editID == expense._id) return { ...expense, text: inputT.value, cost: inputN.value  };
-        //     return expense;
-        // });
-
-        expenseList = expenseList.map((expense,index) => {
-            if (editID == index) return { ...expense, text: inputT.value, cost: inputN.value };
+        const response = await fetch(`http://localhost:4000/expense/${editID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({
+                text: inputText,
+                cost: inputCost
+            })
+        });
+        expenseList = expenseList.map(expense => {
+            if (editID == expense._id) return { ...expense, text: inputT.value, cost: inputN.value  };
             return expense;
         });
         inputText = '';
@@ -100,13 +87,11 @@ addExpense = () => {
         inputN.value = '';
         editID = null;
         beingEdited = false;
-
         inputT.focus();
-        // localStorage.setItem('list',JSON.stringify(expenseList));
         render();
     } else if (!inputCost) alert("Пожалуйста, введите сумму расхода");
-     else if (inputCost <= 0) alert("Сумма не может быть меньше нуля ");
-     else alert('Пожалуйста, введите текст');
+    else if (inputCost <= 0) alert("Сумма не может быть меньше нуля");
+    else alert('Пожалуйста, введите текст');
 }
 render = () => {
     const expenseContainer = document.querySelector('.content');
@@ -117,7 +102,7 @@ render = () => {
         // sum
         const sum = document.createElement('p');
         total = totalCost();
-        sum.innerText = `итого: ${total} р.`;
+        sum.innerText = `Итого: ${total} р.`;
         sum.className = 'sum';
         expenseContainer.appendChild(sum);
 
@@ -147,56 +132,26 @@ render = () => {
             editBtn.innerText = 'редактировать';
             editBtn.className = 'edit-btn';
             btnContainer.appendChild(editBtn);
-            editBtn.onclick = () => editExpense(index);
+            editBtn.onclick = () => editExpense(singleExpense._id);
 
             // delete button
             const deleteBtn = document.createElement('button');
             deleteBtn.innerText = 'удалить';
             deleteBtn.className = 'delete-btn';
             btnContainer.appendChild(deleteBtn);
-            deleteBtn.onclick = () => removeExpense(index);
+            deleteBtn.onclick = () => removeExpense(singleExpense._id);
 
             // appending expense to container
             expenseContainer.appendChild(expense);
         });
-
-        // clear all items button
-        // if (expenseList.length) {
-        //     const clearAllBtn = document.createElement('button');
-        //     clearAllBtn.innerText = 'clear all';
-        //     clearAllBtn.type = 'button';
-        //     clearAllBtn.className = 'clearAll-btn';
-        //     clearAllBtn.onclick = () => clearAllExpenses();
-        //     expenseContainer.appendChild(clearAllBtn);
-        // }
     }
-
 }
-
-// onChangeCheckbox = async (id) => {
-//     expenseList[id].cost = !expenseList[id].cost;
-//     // localStorage.setItem('list',JSON.stringify(expenseList));
-
-//     const response = await fetch(`http://localhost:4000/expense/${expenseList[id]._id}`, {
-//         method: 'PUT',
-//         headers: {
-//             'Content-Type': 'application/json;charset=utf-8',
-//             'Access-Control-Allow-Origin': '*'
-//         },
-//         body: JSON.stringify({
-//             cost: expenseList[id].cost,
-//         })
-//     });
-//     let result = await response.json();
-//     render();
-// }
 totalCost = () => {
     return expenseList.reduce((res, obj) => res += Number(obj.cost),0);
 }
 
 editExpense = (id) => {
-    // const specificItem = expenseList.find(expense => id === expense._id);
-    const specificItem = expenseList.find((expense, index) => id === index);
+    const specificItem = expenseList.find(expense => id === expense._id);
     inputT.value = specificItem.text;
     inputText = specificItem.text;
     inputN.value = specificItem.cost;
@@ -205,21 +160,10 @@ editExpense = (id) => {
     beingEdited = true;
     inputT.focus();
 }
-removeExpense = (id) => { // add async
-    // const response = await fetch(`http://localhost:4000/expense/${id}`, {
-    //     method: 'DELETE'
-    // });
-    // let result = await response.json();
-    // expenseList = expenseList.filter(item => id !== item._id);
-    expenseList = expenseList.filter((item, index) => id !== index);
-    // localStorage.setItem('list',JSON.stringify(expenseList));
+removeExpense = async (id) => {
+    const response = await fetch(`http://localhost:4000/expense/${id}`, {
+        method: 'DELETE'
+    });
+    expenseList = expenseList.filter(item => id !== item._id);
     render();
 }
-// clearAllExpenses = () => {
-//     // const response = await fetch(`http://localhost:4000/expense`, {
-//     //     method: 'DELETE'
-//     // });
-//     expenseList = [];
-//     // localStorage.setItem('list',JSON.stringify(expenseList));
-//     render();
-// }
