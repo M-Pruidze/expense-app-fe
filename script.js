@@ -7,9 +7,29 @@ let beingEdited = false;
 let editBtn;
 let editID = null;
 let total;
+const userId = JSON.parse(localStorage.getItem('userId'));
+const jwt = JSON.parse(localStorage.getItem('access_token'));
+
+const checkUser = async () => {
+    try {
+        console.log(`user id`, userId);
+        console.log(`jwt`, jwt)
+        const response = await fetch('http://localhost:4000/user/${userId}/profile', {
+                method: "GET",
+                headers: {Authorization: `Bearer ${jwt}`}
+            });
+        if (response.status === 401) {
+            window.location.href = 'login.html';
+        }
+    } catch (error) {
+        console.log(`error login`, error)
+    }
+};
+
 
 
 window.onload = async () => {
+    checkUser();
     inputT = document.getElementById('inputText');
     inputN = document.getElementById('inputCost');
     const addBtn = document.getElementById("add-btn");
@@ -30,12 +50,17 @@ window.onload = async () => {
     addBtn.addEventListener("click", addExpense);
 
     const response = await (await fetch('http://localhost:4000/expense', {
-        method: 'GET'
+        method: 'GET',
+        headers: {Authorization: `Bearer ${jwt}`}
     })).json();
     expenseList = response;
     render();
 }
-
+logout = () => {
+    window.localStorage.removeItem('userId');
+    window.localStorage.removeItem('access_token');
+    window.location.href = 'login.html';
+}
 updateValueT = (e) => {
     inputText = e.target.value;
 }
@@ -49,15 +74,21 @@ addExpense = async () => {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                Authorization: `Bearer ${jwt}`,
             },
             body: JSON.stringify({
                 text: inputText,
                 cost: inputCost,
+                userId,
             })
         });
         let result = await resp.json();
+        console.log(`result`, result)
         expenseList.push(result);
+        console.log(`result`, result);
+        console.log(`expenseList`, expenseList);
+
         inputText = '';
         inputT.value = '';
         inputCost = '';
@@ -69,7 +100,8 @@ addExpense = async () => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                'Access-Control-Allow-Origin': '*'
+                'Access-Control-Allow-Origin': '*',
+                Authorization: `Bearer ${jwt}`
             },
             body: JSON.stringify({
                 text: inputText,
@@ -161,7 +193,8 @@ editExpense = (id) => {
 }
 removeExpense = async (id) => {
     const response = await fetch(`http://localhost:4000/expense/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {Authorization: `Bearer ${jwt}`},
     });
     expenseList = expenseList.filter(item => id !== item._id);
     render();
