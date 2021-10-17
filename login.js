@@ -1,3 +1,7 @@
+let firstNameE;
+let lastNameE;
+let inputFirstName = '';
+let inputLastName = '';
 let email;
 let password;
 let inputEmail = '';
@@ -5,11 +9,32 @@ let inputPassword = '';
 let id;
 let userId;
 let token;
+let firstName;
+let lastName;
+
 
 window.onload = async () => {
+    firstNameE = document.getElementById('firstName');
+    lastNameE = document.getElementById('lastName');
     email = document.getElementById('email');
     password = document.getElementById('password');
     const signup = document.getElementById("signup");
+    if (firstNameE && lastNameE) {
+        firstNameE.addEventListener('change',updateFirstName);
+        lastNameE.addEventListener('change',updateLastName);
+        firstNameE.addEventListener('keyup', (event) => {
+            if (event.code === 'Enter') {
+                event.preventDefault;
+                lastName.focus();
+            }
+        });
+        lastNameE.addEventListener('keyup', (event) => {
+            if (event.code === 'Enter') {
+                event.preventDefault;
+                email.focus();
+            }
+        });
+    };
     email.addEventListener('change',updateEmail);
     password.addEventListener('change',updatePassword);
     email.addEventListener('keyup', (event) => {
@@ -24,10 +49,14 @@ window.onload = async () => {
             // signUp();
         }
     });
-    // signup.addEventListener("click", signUp);
-
 }
 
+updateFirstName = (e) => {
+    inputFirstName = e.target.value;
+}
+updateLastName = (e) => {
+    inputLastName = e.target.value;
+}
 updateEmail = (e) => {
     inputEmail = e.target.value;
 }
@@ -43,17 +72,27 @@ signUp = async () => {
                     'Access-Control-Allow-Origin': '*'
                 },
                 body: JSON.stringify({
+                    firstName: inputFirstName,
+                    lastName: inputLastName,
                     email: inputEmail,
                     password: inputPassword
                 })
             });
             const result = await resp.json();
-            console.log(`result`, result)
-            console.log(`resp`, resp)
+
+            // logging the error to console
+            if (resp.status !== 200) console.log(result);
+
+            inputFirstName = '';
+            firstNameE.value = '';
+            inputLastName = '';
+            lastNameE.value = '';
             inputEmail = '';
             email.value = '';
             inputPassword = '';
-            window.location.href = 'login.html';
+            password.value = '';
+
+            if (resp.status === 200) window.location.href = 'login.html';
 
         } catch (error) {
             console.log(`error signup`, error)
@@ -76,14 +115,19 @@ login = async () => {
             });
             const result = await resp.json();
             token = result.token;
-            console.log(`token`, token);
-            console.log(`result`, result);
+
+            // logging the error to console
+            if (resp.status !== 200) console.log(result.info.message);
 
             userId = result.user._id;
-            console.log(`userId`, userId);
+            firstName = result.user.firstName;
+            lastName = result.user.lastName;
+            console.log(`rsult`, result)
 
             localStorage.setItem('access_token',JSON.stringify(token));
             localStorage.setItem('userId',JSON.stringify(userId));
+            localStorage.setItem('firstName',JSON.stringify(firstName));
+            localStorage.setItem('lastName',JSON.stringify(lastName));
 
             inputEmail = '';
             email.value = '';

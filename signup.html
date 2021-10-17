@@ -10,18 +10,26 @@
 
 </head>
 <body>
-    <div class="home">
+    <div class="home signup">
         <div class="form">
-            <h1>sign up</h1>
+            <h1>регистрация</h1>
             <div>
-                <label for="email">email</label>
+                <label for="firstName">имя</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div>
+                <label for="lastName">фамилия</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div>
+                <label for="email">адрес эл. почты</label>
                 <input type="email" id="email" name="email" required>
             </div>
             <div>
-                <label for="password">password</label>
+                <label for="password">Пароль</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" id="signup" onclick=signUp()>sign up</button>
+            <button type="submit" id="signup" onclick=signUp()>зарегистрироваться</button>
         </div>
     </div>
 

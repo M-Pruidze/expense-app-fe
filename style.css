@@ -21,6 +21,10 @@ body{
     box-shadow: 5px 10px 18px #888888;
     background: #b6e2ff;
 }
+span.fullName {
+    align-self: end;
+    padding: .25rem .5rem .25rem 1rem;
+}
 .header{
     margin-bottom: 2rem;
     padding: 1rem 2rem;
@@ -46,7 +50,7 @@ body{
     text-transform: capitalize;
     font-size: 18px;
     text-align: left;
-    margin: .5rem 0.5rem 0 0;
+    margin: .5rem 0.6rem 0 0;
 }
 .app input,.app .add-btn {
     line-height: 3rem;
@@ -65,7 +69,6 @@ button:hover{
 .header button{
     padding: .25rem 1rem;
     background: #499879;
-    /* height: 50%; */
     align-self: end;
 }
 @media only screen and (max-width: 760px) {
@@ -115,6 +118,10 @@ article.expense-container{
 }
 
  /* login styles */
+ a {
+     text-decoration: none;
+     color: #000;
+ }
 .home {
     width: 100%;
     max-width: 400px;
@@ -122,7 +129,9 @@ article.expense-container{
     border-radius: 1rem;
     margin: 20vh auto;
 }
-
+.signup {
+    margin-top: 2vh;
+}
 .form{
     display: block;
     width: 100%;

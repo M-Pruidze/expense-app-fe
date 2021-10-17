@@ -9,11 +9,12 @@ let editID = null;
 let total;
 const userId = JSON.parse(localStorage.getItem('userId'));
 const jwt = JSON.parse(localStorage.getItem('access_token'));
+const firstName = JSON.parse(localStorage.getItem('firstName'));
+const lastName = JSON.parse(localStorage.getItem('lastName'));
+// let fullName;
 
 const checkUser = async () => {
     try {
-        console.log(`user id`, userId);
-        console.log(`jwt`, jwt)
         const response = await fetch('http://localhost:4000/user/${userId}/profile', {
                 method: "GET",
                 headers: {Authorization: `Bearer ${jwt}`}
@@ -30,6 +31,9 @@ const checkUser = async () => {
 
 window.onload = async () => {
     checkUser();
+    fullName = document.querySelector('.fullName');
+    fullName.innerText = `${firstName} ${lastName}`;
+    fullName.title = `${firstName} ${lastName}`;
     inputT = document.getElementById('inputText');
     inputN = document.getElementById('inputCost');
     const addBtn = document.getElementById("add-btn");
@@ -53,12 +57,17 @@ window.onload = async () => {
         method: 'GET',
         headers: {Authorization: `Bearer ${jwt}`}
     })).json();
+
+    // fullName.innerText = `${response[0].firstName} ${response[0].lastName}`;
+
     expenseList = response;
     render();
 }
 logout = () => {
     window.localStorage.removeItem('userId');
     window.localStorage.removeItem('access_token');
+    window.localStorage.removeItem('firstName');
+    window.localStorage.removeItem('lastName');
     window.location.href = 'login.html';
 }
 updateValueT = (e) => {
@@ -81,13 +90,12 @@ addExpense = async () => {
                 text: inputText,
                 cost: inputCost,
                 userId,
+                firstName,
+                lastName,
             })
         });
         let result = await resp.json();
-        console.log(`result`, result)
         expenseList.push(result);
-        console.log(`result`, result);
-        console.log(`expenseList`, expenseList);
 
         inputText = '';
         inputT.value = '';
@@ -120,9 +128,8 @@ addExpense = async () => {
         beingEdited = false;
         inputT.focus();
         render();
-    } else if (!inputCost) inputN.className = 'error';
-    else if (inputCost <= 0) inputN.className = 'error';
-    else inputT.className = 'error';
+    } else if (!inputCost || inputCost < 0) inputN.className = 'error';
+    else if (!inputText.trim()) inputT.className = 'error';
 }
 render = () => {
     const expenseContainer = document.querySelector('.content');
