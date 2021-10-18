@@ -59,7 +59,6 @@ window.onload = async () => {
 
     expenseList = response;
     render();
-    // console.log(`process.env.AGE`, process.env.AGE)
 }
 logout = () => {
     window.localStorage.removeItem('userId');
@@ -76,7 +75,7 @@ updateValueC = (e) => {
 }
 
 addExpense = async () => {
-    const regex = /[a-z]+\s*(\d{1,2}\W\d{1,2}\W\d{2,4})$/gi;
+    const regex = /[a-z]+/gmi;
     if (inputText.trim() && regex.test(inputText) && inputCost > 0 && !beingEdited) {
         const resp = await fetch('https://expense-app-be.herokuapp.com/expense', {
             method: "POST",
