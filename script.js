@@ -1,3 +1,5 @@
+// require('dotenv').config();
+
 let inputT;
 let inputN;
 let inputText = '';
@@ -62,6 +64,7 @@ window.onload = async () => {
 
     expenseList = response;
     render();
+    // console.log(`process.env.AGE`, process.env.AGE)
 }
 logout = () => {
     window.localStorage.removeItem('userId');
@@ -101,6 +104,8 @@ addExpense = async () => {
         inputT.value = '';
         inputCost = '';
         inputN.value = '';
+        inputT.style.border = 'none';
+        inputN.style.border = 'none';
         inputT.focus();
         render();
     } else if (inputText.trim() && inputCost > 0 && beingEdited) {
@@ -128,8 +133,12 @@ addExpense = async () => {
         beingEdited = false;
         inputT.focus();
         render();
-    } else if (!inputCost || inputCost < 0) inputN.className = 'error';
-    else if (!inputText.trim()) inputT.className = 'error';
+    } else if (!inputText.trim()) {
+        inputT.style.border = '2px solid red';
+        inputT.focus();
+    }
+    else if (!inputCost || inputCost <= 0) inputN.style.border = '2px solid red';
+
 }
 render = () => {
     const expenseContainer = document.querySelector('.content');

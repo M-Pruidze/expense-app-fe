@@ -18,14 +18,15 @@ window.onload = async () => {
     lastNameE = document.getElementById('lastName');
     email = document.getElementById('email');
     password = document.getElementById('password');
-    const signup = document.getElementById("signup");
+    const signupBtn = document.getElementById("signup");
+    const loginBtn = document.getElementById("login");
     if (firstNameE && lastNameE) {
         firstNameE.addEventListener('change',updateFirstName);
         lastNameE.addEventListener('change',updateLastName);
         firstNameE.addEventListener('keyup', (event) => {
             if (event.code === 'Enter') {
                 event.preventDefault;
-                lastName.focus();
+                lastNameE.focus();
             }
         });
         lastNameE.addEventListener('keyup', (event) => {
@@ -46,7 +47,8 @@ window.onload = async () => {
     password.addEventListener('keyup', (event) => {
         if (event.code === 'Enter') {
             event.preventDefault;
-            // signUp();
+            if (firstNameE && lastNameE) signupBtn.click();
+            else loginBtn.click();
         }
     });
 }
@@ -80,9 +82,12 @@ signUp = async () => {
             });
             const result = await resp.json();
 
-            // logging the error to console
-            if (resp.status !== 200) console.log(result);
-
+            // handling error messages
+            const err_message = document.querySelector('.err-msg');
+            if (resp.status !== 200) {
+                err_message.innerHTML = `* ${result.message}`;
+                return false;
+            }
             inputFirstName = '';
             firstNameE.value = '';
             inputLastName = '';
@@ -116,13 +121,13 @@ login = async () => {
             const result = await resp.json();
             token = result.token;
 
-            // logging the error to console
-            if (resp.status !== 200) console.log(result.info.message);
+            // handling error messages
+            const err_message = document.querySelector('.err-msg');
+            if (resp.status !== 200) err_message.innerHTML = `* ${result.message}`;
 
             userId = result.user._id;
             firstName = result.user.firstName;
             lastName = result.user.lastName;
-            console.log(`rsult`, result)
 
             localStorage.setItem('access_token',JSON.stringify(token));
             localStorage.setItem('userId',JSON.stringify(userId));
