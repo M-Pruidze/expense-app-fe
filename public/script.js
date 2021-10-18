@@ -50,7 +50,7 @@ window.onload = async () => {
             addBtn.click();
         }
     });
-    addBtn.addEventListener("click", addExpense);
+    // addBtn.addEventListener("click", addExpense);
 
     const response = await (await fetch('https://expense-app-be.herokuapp.com/expense', {
         method: 'GET',
@@ -76,6 +76,7 @@ updateValueC = (e) => {
 
 addExpense = async () => {
     const regex = /[a-z]+/gi;
+    console.log(`regex.test(inputText)`, regex.test(inputText))
     if (inputText.trim() && regex.test(inputText) && inputCost > 0 && !beingEdited) {
         const resp = await fetch('https://expense-app-be.herokuapp.com/expense', {
             method: "POST",
@@ -210,3 +211,5 @@ removeExpense = async (id) => {
     expenseList = expenseList.filter(item => id !== item._id);
     render();
 }
+
+addBtn.addEventListener("click", addExpense);
