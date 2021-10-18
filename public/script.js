@@ -75,7 +75,7 @@ updateValueC = (e) => {
 }
 
 addExpense = async () => {
-    const regex = /[a-z]+/gmi;
+    const regex = /[a-z]+/gi;
     if (inputText.trim() && regex.test(inputText) && inputCost > 0 && !beingEdited) {
         const resp = await fetch('https://expense-app-be.herokuapp.com/expense', {
             method: "POST",
@@ -102,6 +102,8 @@ addExpense = async () => {
         inputT.focus();
         render();
     } else if (inputText.trim() && regex.test(inputText) && inputCost > 0 && beingEdited) {
+        console.log(`1`, 1)
+
         const response = await fetch(`https://expense-app-be.herokuapp.com/expense/${editID}`, {
             method: 'PUT',
             headers: {
