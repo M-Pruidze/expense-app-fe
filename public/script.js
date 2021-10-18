@@ -1,5 +1,3 @@
-// require('dotenv').config();
-
 let inputT;
 let inputN;
 let inputText = '';
@@ -13,7 +11,6 @@ const userId = JSON.parse(localStorage.getItem('userId'));
 const jwt = JSON.parse(localStorage.getItem('access_token'));
 const firstName = JSON.parse(localStorage.getItem('firstName'));
 const lastName = JSON.parse(localStorage.getItem('lastName'));
-// let fullName;
 
 const checkUser = async () => {
     try {
@@ -60,8 +57,6 @@ window.onload = async () => {
         headers: {Authorization: `Bearer ${jwt}`}
     })).json();
 
-    // fullName.innerText = `${response[0].firstName} ${response[0].lastName}`;
-
     expenseList = response;
     render();
     // console.log(`process.env.AGE`, process.env.AGE)
@@ -81,7 +76,8 @@ updateValueC = (e) => {
 }
 
 addExpense = async () => {
-    if (inputText.trim() && inputCost > 0 && !beingEdited) {
+    const regex = /[a-z]+(\d{1,2}\W\d{1,2}\W\d{2,4})$/gi;
+    if (inputText.trim() && regex.test(inputText) && inputCost > 0 && !beingEdited) {
         const resp = await fetch('https://expense-app-be.herokuapp.com/expense', {
             method: "POST",
             headers: {
@@ -93,8 +89,8 @@ addExpense = async () => {
                 text: inputText,
                 cost: inputCost,
                 userId,
-                firstName,
-                lastName,
+                // firstName,
+                // lastName,
             })
         });
         let result = await resp.json();
@@ -108,7 +104,7 @@ addExpense = async () => {
         inputN.style.border = 'none';
         inputT.focus();
         render();
-    } else if (inputText.trim() && inputCost > 0 && beingEdited) {
+    } else if (inputText.trim() && regex.test(inputText) && inputCost > 0 && beingEdited) {
         const response = await fetch(`https://expense-app-be.herokuapp.com/expense/${editID}`, {
             method: 'PUT',
             headers: {
@@ -133,7 +129,7 @@ addExpense = async () => {
         beingEdited = false;
         inputT.focus();
         render();
-    } else if (!inputText.trim()) {
+    } else if (!inputText.trim() || !regex.test(inputText)) {
         inputT.style.border = '2px solid red';
         inputT.focus();
     }

@@ -143,4 +143,4 @@ login = async () => {
             console.log(`error login`, error)
         }
 }
-
+sign = () => window.location.href = 'signup.html';
