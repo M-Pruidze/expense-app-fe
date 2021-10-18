@@ -17,7 +17,7 @@ const lastName = JSON.parse(localStorage.getItem('lastName'));
 
 const checkUser = async () => {
     try {
-        const response = await fetch('http://localhost:4000/user/${userId}/profile', {
+        const response = await fetch('https://expense-app-be.herokuapp.com/user/${userId}/profile', {
                 method: "GET",
                 headers: {Authorization: `Bearer ${jwt}`}
             });
@@ -55,7 +55,7 @@ window.onload = async () => {
     });
     addBtn.addEventListener("click", addExpense);
 
-    const response = await (await fetch('http://localhost:4000/expense', {
+    const response = await (await fetch('https://expense-app-be.herokuapp.com/expense', {
         method: 'GET',
         headers: {Authorization: `Bearer ${jwt}`}
     })).json();
@@ -82,7 +82,7 @@ updateValueC = (e) => {
 
 addExpense = async () => {
     if (inputText.trim() && inputCost > 0 && !beingEdited) {
-        const resp = await fetch('http://localhost:4000/expense', {
+        const resp = await fetch('https://expense-app-be.herokuapp.com/expense', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -109,7 +109,7 @@ addExpense = async () => {
         inputT.focus();
         render();
     } else if (inputText.trim() && inputCost > 0 && beingEdited) {
-        const response = await fetch(`http://localhost:4000/expense/${editID}`, {
+        const response = await fetch(`https://expense-app-be.herokuapp.com/expense/${editID}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -208,7 +208,7 @@ editExpense = (id) => {
     inputT.focus();
 }
 removeExpense = async (id) => {
-    const response = await fetch(`http://localhost:4000/expense/${id}`, {
+    const response = await fetch(`https://expense-app-be.herokuapp.com/expense/${id}`, {
         method: 'DELETE',
         headers: {Authorization: `Bearer ${jwt}`},
     });

@@ -67,7 +67,7 @@ updatePassword = (e) => {
 }
 signUp = async () => {
         try {
-            const resp = await fetch('http://localhost:4000/auth', {
+            const resp = await fetch('https://expense-app-be.herokuapp.com/auth', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
@@ -107,7 +107,7 @@ signUp = async () => {
 
 login = async () => {
         try {
-            const resp = await fetch('http://localhost:4000/auth/login', {
+            const resp = await fetch('https://expense-app-be.herokuapp.com/auth/login', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8',
