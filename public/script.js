@@ -76,6 +76,7 @@ updateValueC = (e) => {
 
 addExpense = async () => {
     const regex = /[a-z]+/gi;
+    console.log(`beingEdited`, beingEdited)
     if (inputText.trim() && regex.test(inputText) && inputCost > 0 && !beingEdited) {
         const resp = await fetch('https://expense-app-be.herokuapp.com/expense', {
             method: "POST",
@@ -101,7 +102,7 @@ addExpense = async () => {
         inputN.style.border = 'none';
         inputT.focus();
         render();
-    } else if (inputText.trim() && regex.test(inputText) && inputCost > 0 && beingEdited) {
+    } else if (inputText.trim() && inputCost > 0 && beingEdited) {
         console.log(`1`, 1)
 
         const response = await fetch(`https://expense-app-be.herokuapp.com/expense/${editID}`, {
@@ -127,6 +128,8 @@ addExpense = async () => {
         editID = null;
         beingEdited = false;
         inputT.focus();
+        const addBtn = document.getElementById("add-btn");
+        addBtn.innerText = "добавить";
         render();
     } else if (!inputText.trim() || !regex.test(inputText)) {
         inputT.style.border = '2px solid red';
@@ -193,6 +196,8 @@ totalCost = () => {
 }
 
 editExpense = (id) => {
+    const addBtn = document.getElementById("add-btn");
+    addBtn.innerText = "редактировать";
     const specificItem = expenseList.find(expense => id === expense._id);
     inputT.value = specificItem.text;
     inputText = specificItem.text;
