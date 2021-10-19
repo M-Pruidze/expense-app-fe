@@ -28,7 +28,7 @@ span.fullName {
 }
 .header{
     margin-bottom: 2rem;
-    padding: 1rem 2rem;
+    padding: 1rem 1rem;
     display: flex;
     flex-direction: column;
 }
@@ -43,9 +43,13 @@ span.fullName {
 #inputText:focus {
     border: 2px solid red;
 }
+input:active {
+    border: none;
+}
 .single-input{
     display: flex;
     flex-direction: column;
+    min-width: 40%;
 }
 .app input,.app button,.app label{
     padding:.25rem .5rem;
@@ -71,7 +75,7 @@ button:hover{
     cursor: pointer;
 }
 .header button{
-    padding: .25rem 1rem;
+    padding: .25rem .5rem;
     background: #499879;
     align-self: end;
 }
@@ -117,11 +121,6 @@ article.expense-container{
     border:transparent;
     margin-right:0.75rem;
 }
-/* .error{
-    border: 2px solid red;
-} */
-
-
  /* login styles */
 a {
     text-decoration: none;
@@ -193,7 +192,7 @@ button:hover {
     font-weight: 300;
     color: black;
 }
-.home_main button{
+.home_main button, .form button{
     width: 100%;
     padding: .5rem;
     border-radius: .5rem;
@@ -208,15 +207,5 @@ button:hover {
     text-transform: capitalize;
 }
 .form button{
-    width: 100%;
-    padding: .5rem;
-    border-radius: .5rem;
     background: #2f4960;
-    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
-    transition: 0.4s;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-top: 1rem;
-    text-transform: capitalize;
 }
